@@ -1,7 +1,6 @@
 <?php
 include "string.php";
 include "configdb.php";
-include "export_data.php";
 
 //$con = OpenCon();
 
@@ -14,6 +13,8 @@ include "export_data.php";
 
     <!-- Required meta tags -->
   <meta charset="utf-8">
+  <script src="../assets/jquery-3.4.1.min.js" type="text/javascript"></script>
+  <script src="../assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="../assets/bootstrap/css/bootstrap.min.css">
 
@@ -29,6 +30,16 @@ include "export_data.php";
       height: 100%;
     }
   </style>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $(".exportobat").click(function(e){
+        var page = "export_data.php?download_ind=obat";
+        window.location = page;
+        return false;
+      });
+    });
+  </script>
+
 </head>
 
 <body>
@@ -102,13 +113,11 @@ include "export_data.php";
 ?>
   </thead>
 </table>
-<input class="col-sm-4 btn btn-lg btn-primary btn-block my-4" type="submit" value="Download" name="exportstokobat"></input>
+<input class="col-sm-4 btn btn-lg btn-primary btn-block my-4 exportobat" type="submit" value="Download" name="exportstokobat"></input>
 </form>
 </div>
 
 <!-- Footer -->
 
 </body>
-<script src="../assets/jquery-3.4.1.min.js" type="text/javascript"></script>
-<script src="../assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 </html>

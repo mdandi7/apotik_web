@@ -192,12 +192,6 @@ include "obat_con.php";
 </div>
 <form class="border border-primary rounded" method="post">
     <div class="form-group col">
-    <label for="nofaktur" class="font-weight-bold col-sm-3 col-form-label">No. Faktur</label>
-    <div class="col-sm-5">
-      <input type="text" class="form-control" id="nofaktur" name="nofaktur" placeholder="No. Faktur" required="required">
-    </div>
-  </div>
-    <div class="form-group col">
     <label for="namapasien" class="font-weight-bold col-sm-3 col-form-label">Nama Pasien</label>
     <div class="col-sm-5">
       <input type="text" class="form-control" id="namapasien" name="namapasien" placeholder="Nama Pasien" required="required">

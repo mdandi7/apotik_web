@@ -45,7 +45,6 @@
     }
 
     if(isset($_POST['submitnonresep'])){
-        $nofaktur=$_POST['nofaktur'];
         $namaobat=$_POST['namaobat'];
         $kodeobat=$_POST['kodeobat'];
         $hargaobat=$_POST['hargaobat'];
@@ -53,18 +52,20 @@
         $tgl=$_POST['tgl'];
         $total=$_POST['total'];
 
-        $faktur_check = mysqli_query($connection, "SELECT * FROM penjualan_tanparesep_detail WHERE no_faktur1 = '$nofaktur'");
-        $stok_check = mysqli_query($connection, "SELECT stok_obat FROM pemasukan_obat WHERE kode_obat = '$kodeobat'");
+        $faktur_check = mysqli_query($connection, "SELECT max(no_faktur1) as no_faktur1 FROM penjualan_tanparesep_detail");
+        $faktur = mysqli_fetch_array($faktur_check);
+        $nofaktur = $faktur['no_faktur1'];
+        $nofaktur += 1;
 
-        $row_check = mysqli_num_rows($faktur_check);
+        $stok_check = mysqli_query($connection, "SELECT stok_obat FROM pemasukan_obat WHERE kode_obat = '$kodeobat'");
         $stok = mysqli_fetch_array($stok_check);
 
         if($stok['stok_obat'] < $jumlah){
             $stoknow = $stok['stok_obat'];
             $error = "Stok obat $namaobat tidak mencukupi. Stok sebanyak $stoknow";
-        }else if ($row_check == 0){
+        }else{
             $update_stok = $stok['stok_obat'] - $jumlah;
-            mysqli_query($connection, "INSERT INTO penjualan_tanparesep_detail(no_faktur1,kode_obat,jumlah,tgl,total1) VALUES ('$nofaktur','$kodeobat','$jumlah','$tgl','$total')");
+            mysqli_query($connection, "INSERT INTO penjualan_tanparesep_detail(kode_obat,jumlah,tgl,total1) VALUES ('$kodeobat','$jumlah','$tgl','$total')");
             mysqli_query($connection,"UPDATE pemasukan_obat SET stok_obat = '$update_stok' WHERE kode_obat = '$kodeobat'");
             $error = "Penjualan obat $namaobat sebanyak $jumlah telah dilakukan pada tanggal $tgl . Stok Obat tersisa $update_stok.";
             $html .= "<div align='center'>";
@@ -81,13 +82,10 @@
             $html .= "</div>";
             $html .= "</div>";
             $html .= "</tr></table>";
-        }else{
-            $error = "Nomor Faktur harus unik dan tidak bisa di duplikasi.";
         }
     }
 
     if(isset($_POST['submitresep'])){
-        $nofaktur=$_POST['nofaktur'];
         $namapasien=$_POST['namapasien'];
         $namadokter=$_POST['namadokter'];
         $namaobat=$_POST['namaobat'];
@@ -97,18 +95,21 @@
         $tgl=$_POST['tgl'];
         $total=$_POST['total'];
 
-        $faktur_check = mysqli_query($connection, "SELECT * FROM penjualan_resep_detail WHERE no_faktur = '$nofaktur'");
-        $stok_check = mysqli_query($connection, "SELECT stok_obat FROM pemasukan_obat WHERE kode_obat = '$kodeobat'");
+        $faktur_check = mysqli_query($connection, "SELECT max(no_faktur) as no_faktur FROM penjualan_resep_detail");
+        $faktur = mysqli_fetch_array($faktur_check);
+        $nofaktur = $faktur['no_faktur'];
+        $nofaktur += 1;
 
-        $row_check = mysqli_num_rows($faktur_check);
+        $stok_check = mysqli_query($connection, "SELECT stok_obat FROM pemasukan_obat WHERE kode_obat = '$kodeobat'");
         $stok = mysqli_fetch_array($stok_check);
+
 
         if($stok['stok_obat'] < $jumlah){
             $stoknow = $stok['stok_obat'];
             $error = "Stok obat $namaobat tidak mencukupi. Stok sebanyak $stoknow";
-        }else if ($row_check == 0){
+        }else{
             $update_stok = $stok['stok_obat'] - $jumlah;
-            mysqli_query($connection, "INSERT INTO penjualan_resep_detail(no_faktur,kode_obat,nama_pasien,nama_dokter,jumlah,tgl,total) VALUES ('$nofaktur','$kodeobat','$namapasien','$namadokter','$jumlah','$tgl','$total')");
+            mysqli_query($connection, "INSERT INTO penjualan_resep_detail(kode_obat,nama_pasien,nama_dokter,jumlah,tgl,total) VALUES ('$kodeobat','$namapasien','$namadokter','$jumlah','$tgl','$total')");
             mysqli_query($connection,"UPDATE pemasukan_obat SET stok_obat = '$update_stok' WHERE kode_obat = '$kodeobat'");
             $error = "Penjualan obat $namaobat sebanyak $jumlah telah dilakukan pada tanggal $tgl . Stok Obat tersisa $update_stok.";
             $html .= "<div align='center'>";
@@ -125,8 +126,6 @@
             $html .= "</div>";
             $html .= "</div>";
             $html .= "</tr></table>";
-        }else{
-            $error = "Nomor Faktur harus unik dan tidak bisa di duplikasi.";
         }
     }
 ?>

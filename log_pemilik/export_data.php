@@ -1,12 +1,17 @@
-<?php
+	<?php
     ob_start();
     $error=""; // Variable To Store Error Message
     $connection = mysqli_connect("localhost", "root", "", "apotik");
-	if(isset($_POST['exportharian'])){
+
+    $download_ind = $_GET["download_ind"];
+    
+
+	if($download_ind == "daily"){
 		@header("Content-Disposition: attachment; filename=penjualan_harian.csv");
 
+		$tgl=$_GET["data"];
 
-		$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE tgl = convert(now(),date)");
+		$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE tgl = '$tgl'");
 		$data = "";
 		$data.="Penjualan Tanpa Resep \n\n";
 		$data.="Kode Faktur,";
@@ -27,7 +32,7 @@
 
 	 	$data.="\n\n";
 
-	 	$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE tgl = convert(now(),date)");
+	 	$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE tgl = '$tgl'");
 		$data.="Penjualan Dengan Resep \n\n";
 		$data.="Kode Faktur,";
 		$data.="Kode Obat,";
@@ -53,11 +58,12 @@
  		exit();
 		}
 
-		if(isset($_POST['exportbulanan'])){
+		if($download_ind == "monthly"){
 		@header("Content-Disposition: attachment; filename=penjualan_bulanan.csv");
 
+		$tgl=$_GET["data"];
 
-		$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE month(tgl) = month(now())");
+		$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE DATE_FORMAT(tgl,'%Y-%m') = '$tgl'");
 		$data = "";
 		$data.="Penjualan Tanpa Resep \n\n";
 		$data.="Kode Faktur,";
@@ -78,7 +84,7 @@
 
 	 	$data.="\n\n";
 
-	 	$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE month(tgl) = month(now())");
+	 	$query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE DATE_FORMAT(tgl,'%Y-%m') = '$tgl'");
 		$data.="Penjualan Dengan Resep \n\n";
 		$data.="Kode Faktur,";
 		$data.="Kode Obat,";
@@ -104,7 +110,7 @@
  		exit();
 		}
 
-		if(isset($_POST['exportpasien'])){
+		if($download_ind == "pasien"){
 		@header("Content-Disposition: attachment; filename=Konsultasi_pasien.csv");
 
 
@@ -131,7 +137,7 @@
  		exit();
 		}
 
-		if(isset($_POST['exportstokobat'])){
+		if($download_ind == "obat"){
 		@header("Content-Disposition: attachment; filename=Stok_Obat.csv");
 
 

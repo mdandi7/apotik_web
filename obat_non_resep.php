@@ -11,7 +11,8 @@ include "obat_con.php";
   <title><?php echo $nama_aplikasi ?></title>
   <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
 
   <!-- Style And Script for Live Search -->
   <style type="text/css">
@@ -214,20 +215,20 @@ include "obat_con.php";
 </div>
 <form class="border border-primary rounded" method="post">
     <div class="form-group col">
-    <label for="nofaktur" class="font-weight-bold col-sm-3 col-form-label">No. Faktur</label>
-    <div class="col-sm-5">
-      <input type="text" class="form-control" id="nofaktur" name="nofaktur" placeholder="No. Faktur" required="required">
-    </div>
-  </div>
-    <div class="form-group col">
     <label for="namaobat" class="font-weight-bold col-sm-3 col-form-label">Nama Obat</label>
     <div class="col-sm-5">
-    <div class="search-box">
-        <!-- <input type="text" class="form-control" id="namaobat" name="namaobat" placeholder="Nama Obat"> -->
-        <input type="text" class="form-control" id="namaobat" name="namaobat" autocomplete="off" placeholder="Nama Obat..." required="required">
-        <div class="result"></div>
+    <div class="form-inline">
+      <div class="search-box">
+          <!-- <input type="text" class="form-control" id="namaobat" name="namaobat" placeholder="Nama Obat"> -->
+          <input type="text" class="form-control" id="namaobat" name="namaobat" autocomplete="off" placeholder="Nama Obat..." required="required">
+          
+          <div class="result"></div>
+        </div>
+        <input type="text" class="form-control" id="kodeobat" name="kodeobat" readonly="readonly" style="display: none;">
+        <button type="button" class="mx-2 btn btn-default ">
+            <span class="fa fa-plus" aria-hidden="true"></span>
+        </button>
       </div>
-      <input type="text" class="form-control" id="kodeobat" name="kodeobat" readonly="readonly" style="display: none;">
     </div>
   </div>
     <div class="form-group col">
