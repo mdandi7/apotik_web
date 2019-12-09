@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Des 2019 pada 17.04
+-- Waktu pembuatan: 09 Des 2019 pada 17.11
 -- Versi server: 10.1.36-MariaDB
 -- Versi PHP: 7.2.11
 
@@ -21,6 +21,34 @@ SET time_zone = "+00:00";
 --
 -- Database: `apotik`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pasien`
+--
+
+CREATE TABLE `pasien` (
+  `nama` varchar(30) NOT NULL,
+  `alamat` varchar(30) NOT NULL,
+  `umur` int(3) NOT NULL,
+  `pengukuran` varchar(50) DEFAULT NULL,
+  `hasil` varchar(50) NOT NULL,
+  `tanggal` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `pasien`
+--
+
+INSERT INTO `pasien` (`nama`, `alamat`, `umur`, `pengukuran`, `hasil`, `tanggal`) VALUES
+('Dandi', 'Kendari', 52, 'Asam Urat Pria (3,5 -7,0 mg/dL) Wanita (2,6 - 6,0 ', 'Penyakitan', '2019-09-18'),
+('Ranti', 'Wundulako', 21, 'Tekanan Darah (120/80 mmHg)', '105/73 mmHg', '2019-09-26'),
+('Ika', 'Silea', 25, 'Gula Darah Puasa (72-126 mg/dL)', '70', '2019-09-26'),
+('Nur', 'Wundulako', 46, 'Tekanan Darah (120/80 mmHg)', '105/20', '2019-09-26'),
+('Ranti', 'Wundulako', 21, 'Kolesterol (<200 mg/dL)', '200 mg/dl', '2019-10-02'),
+('Rudiman', 'Wundulako', 43, 'Tekanan Darah (120/80 mmHg)', '170/20', '2019-10-23'),
+('Kasrul', 'Sabiano', 55, 'Kolesterol (<200 mg/dL)', '300mg/dl', '2019-10-23');
 
 -- --------------------------------------------------------
 
