@@ -115,6 +115,10 @@ include "obat_con.php";
     }
 
     $(document).ready(function(){
+      FunctionOnLoad();
+    });
+
+    function FunctionOnLoad(){
         $('.search-box input[type="text"]').on("keyup input", function(){
             /* Get input value on change */
             var inputVal = $(this).val();
@@ -134,7 +138,11 @@ include "obat_con.php";
             $(this).parents(".search-box").find('input[type="text"]').val($(this).text());
             $(this).parent(".result").empty();
         });
-    });
+
+        $(".btn-insert").click(function(e){
+          $(this).parent(".line-input").clone().insertAfter($(this).closest(".line-input"));
+        });
+    }
 
     function PrintDiv() {    
       var divToPrint = document.getElementById('divToPrint');
@@ -217,18 +225,19 @@ include "obat_con.php";
     <div class="form-group col">
     <label for="namaobat" class="font-weight-bold col-sm-3 col-form-label">Nama Obat</label>
     <div class="col-sm-5">
-    <div class="form-inline">
+
+    <div class="form-inline line-input">
       <div class="search-box">
           <!-- <input type="text" class="form-control" id="namaobat" name="namaobat" placeholder="Nama Obat"> -->
           <input type="text" class="form-control" id="namaobat" name="namaobat" autocomplete="off" placeholder="Nama Obat..." required="required">
-          
+
           <div class="result"></div>
         </div>
         <input type="text" class="form-control" id="kodeobat" name="kodeobat" readonly="readonly" style="display: none;">
-        <button type="button" class="mx-2 btn btn-default ">
+        <button type="button" class="mx-2 my-1 btn btn-default btn-insert">
             <span class="fa fa-plus" aria-hidden="true"></span>
         </button>
-      </div>
+    </div>
     </div>
   </div>
     <div class="form-group col">

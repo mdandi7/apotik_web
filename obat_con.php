@@ -75,7 +75,7 @@
             $html .= "Jl. Poros Kolaka-Pomalaa No.12 Kel.Wundulako.<br>";
             $html .= "---------------------------------------------------------<br><br></div>";
             $html .= "<div>Faktur &nbsp;&nbsp;&nbsp;: $nofaktur <br>";
-            $html .= "$tgl";
+            $html .= "Admin : $login_name |Tanggal : $tgl";
             $html .= "<table style='border-style: dashed;'><b><tr style='backgrouond-color:blue;' align='center'><th>Nama Obat</th><th>Harga</th><th>Jumlah</th><th>Total</th></tr></b>";
             $html .= "<tr><td>$namaobat</td><td>$hargaobat</td><td>$jumlah</td><td>$total</td></tr>";
             $html .= "</table>";
@@ -119,7 +119,7 @@
             $html .= "Jl. Poros Kolaka-Pomalaa No.12 Kel.Wundulako<br>";
             $html .= "---------------------------------------------------------<br><br></div>";
             $html .= "<div>Faktur &nbsp;&nbsp;&nbsp;: $nofaktur &nbsp;&nbsp;&nbsp; Nama Pasien &nbsp;&nbsp;&nbsp;: $namapasien<br>";
-            $html .= "$tgl";
+            $html .= "Admin : $login_name |Tanggal : $tgl";
             $html .= "<table style='border-style: dashed;'><b><tr style='backgrouond-color:blue;' align='center'><th>Nama Obat</th><th>Harga</th><th>Jumlah</th><th>Total</th></tr></b>";
             $html .= "<tr><td>$namaobat</td><td>$hargaobat</td><td>$jumlah</td><td>$total</td></tr>";
             $html .= "</table>";

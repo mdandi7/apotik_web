@@ -15,7 +15,11 @@ include "input_con.php"
     <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <link href="../assets/plugin/font-awesome/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="../assets/bootstrap/css/bootstrap.min.css">
+
+  <script src="../assets/jquery-3.4.1.min.js" type="text/javascript"></script>
+  <script src="../assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
 	<style type="text/css">
 		.navbar {
@@ -51,6 +55,15 @@ include "input_con.php"
       var fullDate = today.getFullYear()+month+date;
       document.getElementById('tgl').value = fullDate;
     }
+
+    function PrintDiv() {    
+      var divToPrint = document.getElementById('divToPrint');
+      var popupWin = window.open('', '_blank');
+      popupWin.document.open();
+      popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');
+      popupWin.document.close();
+    }
+
   </script>
 </head>
 
@@ -61,6 +74,7 @@ include "input_con.php"
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
+
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
@@ -79,9 +93,9 @@ include "input_con.php"
 	      </div>
 	  </li>
       </ul>
-    </ul>
   </div>
 </nav>
+
 
 
  <!-- Jumbotron -->
@@ -106,7 +120,7 @@ include "input_con.php"
     <!-- <span><?php echo $error; ?></span> -->
     <label for="Nama" class="font-weight-bold col-sm-3 col-form-label">Nama</label>
     <div class="col-sm-5">
-      <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama" required></input>
+      <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama" required>
     </div>
   </div>
     <div class="form-group col">
@@ -134,26 +148,27 @@ include "input_con.php"
     </select>
     </div>
   </div>
-    <div class="form-group col">
+  <div class="form-group col">
     <label for="hasil" class="font-weight-bold col-sm-3 col-form-label">Hasil</label>
     <div class="col-sm-5">
       <input type="text" class="form-control" id="hasil" placeholder="hasil" name="hasil" required>
     </div>
   </div>
+
     <div class="form-group col">
     <label for="tanggal" class="font-weight-bold col-sm-3 col-form-label">Tanggal</label>
     <div class="col-sm-5">
-      <input type="date" class="form-control" id="tgl" name="tgl" placeholder="Tanggal Obat Masuk">
+      <input type="date" class="form-control" id="tgl" name="tgl">
     </div>
   </div>
   <div class="form-group row justify-content-center px-5">
     <div class="col-sm-5">
-      <input class="btn btn-lg btn-primary btn-block" type="submit" name="submitpasien"></input>
+      <input class="btn btn-lg btn-primary btn-block" type="submit" name="submitpasien">
     </div>
   </div>
 </form>
 </div>
-</div>
+</di  v>
 
 
 
@@ -163,7 +178,7 @@ include "input_con.php"
   <span>
     <?php 
       if ($error!=""){
-        echo '<script> var eror = "'; echo $error; echo '";popup(eror); </script>';
+        echo '<script> var eror = "'; echo $error; echo '";popup(eror);</script>';
       } 
     ?>
   </span>
@@ -171,6 +186,17 @@ include "input_con.php"
 <footer class="bg-dark text-center text-light pb-2 pt-2 mt-5 rounded-top"> 
   &copy Copyright 2019
 </footer>
-<script src="../assets/jquery-3.4.1.min.js" type="text/javascript"></script>
-<script src="../assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+
+ <!-- Print -->
+  <div id="divToPrint" style="display:none;">
+    <div>
+             <?php 
+                echo $html; 
+                if($html!=""){
+                  echo"<script type='text/javascript'>PrintDiv();</script>";
+                }
+             ?>      
+    </div>
+  </div>
 </html>
