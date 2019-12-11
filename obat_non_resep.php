@@ -1,8 +1,7 @@
 <?php
 include "string.php";
 include "configdb.php";
-include "obat_con.php";
-?>
+  ?>
 
 
 <!DOCTYPE html>
@@ -44,11 +43,14 @@ include "obat_con.php";
     }
      Formatting result items */
     .result p{
+          
         margin: 0;
         padding: 7px 10px;
         border: 1px solid #CCCCCC;
         border-top: none;
         cursor: pointer;
+        z-index: 999;
+        background : white;
     }
     .result p:hover{
         background: #f2f2f2;
@@ -65,11 +67,6 @@ include "obat_con.php";
     function popup(e) {
       var alertpass =  e;
       alert(alertpass); 
-    }
-
-    function fillHarga(e){
-      document.getElementById('hargaobat').value = e.target.getAttribute('data-harga');
-      document.getElementById('kodeobat').value = e.target.getAttribute('data-kode');
     }
 
     function fillOnLoad(e){
@@ -89,37 +86,8 @@ include "obat_con.php";
       document.getElementById('tgl').value = fullDate;
     }
 
-    function fillTotHarga(e){
-      if(!e){
-        e = 0;
-      }
-
-      var harga = parseInt(document.getElementById('hargaobat').value);
-      if(!harga){
-        harga = 0;
-      }
-
-      document.getElementById('total').value = parseInt(e)*harga;
-    }
-
-    function fillKembali(e){
-      if(!e){
-         e = 0;
-      }
-
-      var total = document.getElementById('total').value;
-      if(!total){
-        total = 0;
-      }
-      document.getElementById('sisa').value = parseInt(e) - total;
-    }
-
     $(document).ready(function(){
-      FunctionOnLoad();
-    });
-
-    function FunctionOnLoad(){
-        $('.search-box input[type="text"]').on("keyup input", function(){
+        $(document).on("keyup input", ".search-text", function(){
             /* Get input value on change */
             var inputVal = $(this).val();
             var resultDropdown = $(this).siblings(".result");
@@ -136,13 +104,85 @@ include "obat_con.php";
         // Set search input value on click of result item
         $(document).on("click", ".result p", function(){
             $(this).parents(".search-box").find('input[type="text"]').val($(this).text());
+            $(this).parents(".search-box").find('input[type="text"]').attr("data-kode", $(this).attr("data-kode"));
+            $(this).parents(".line-input").find('.harga-obat').val($(this).attr('data-harga'));
             $(this).parent(".result").empty();
         });
 
-        $(".btn-insert").click(function(e){
-          $(this).parent(".line-input").clone().insertAfter($(this).closest(".line-input"));
+        $(document).on("click",".btn-insert",function(e){
+          $(this).parent(".line-input").clone().insertAfter($(this).closest(".line-input")).find("input[type='text']").val("").end().find("input[type='number']").val("");
         });
-    }
+
+        $(document).on("keyup input", ".jumlah-obat", function(){
+          var th_val = $(this).val();
+
+          var harga = $(".harga-obat").map(function() {
+             return $(this).val();
+          }).get();
+
+          var jumlah = $(".jumlah-obat").map(function() {
+             return $(this).val();
+          }).get();
+
+          var total = 0;
+
+          for(var i=0;i<harga.length;i++){
+            if(harga[i] == ""){curr_harga = 0;}else{curr_harga = harga[i]};
+            if(jumlah[i] == ""){curr_jumlah = 0;}else{curr_jumlah = jumlah[i]};
+            total += parseInt(curr_harga) * parseInt(curr_jumlah);
+          }
+
+          $(".total-harga").val(total);
+          
+        });
+
+        $(document).on("keyup input", ".pembayaran-int", function(){
+          var kembali = parseInt($(this).val()) - parseInt($(".total-harga").val()); 
+          $(".kembali-int").val(kembali);
+        });
+
+        //BUTTON PEMBAYARAN
+        $(document).on("click", ".btn-submit-penjualan", function(){
+
+          var nama_obat = $(".search-text").map(function() {
+             return $(this).val();
+          }).get();
+
+          var kode_obat = $(".search-text").map(function() {
+             return $(this).attr("data-kode");
+          }).get();
+
+          var jumlah = $(".jumlah-obat").map(function() {
+             return $(this).val();
+          }).get();
+
+          var tanggal = $("#tgl").val();
+          var total = $(".total-harga").val();
+
+          $.ajax({
+            type: "POST",
+            url: 'pembelian-obat-ajax.php',
+            data:{
+              namaobat : nama_obat,
+              kode_obat : kode_obat,
+              jumlah_obat : jumlah,
+              tanggal : tanggal,
+              type : 'non-resep',
+              total_harga : total, 
+            },
+            complete: function(response){
+              alert(response.responseText);
+            },
+            error: function () {
+              //alert("Select failed.");
+              //$('#test').html('Bummer: there was an error!');
+              //document.getElementById("test").innerHTML = prepareSQL;
+            }
+          });
+          return false;
+        });
+
+    });
 
     function PrintDiv() {    
       var divToPrint = document.getElementById('divToPrint');
@@ -221,41 +261,38 @@ include "obat_con.php";
 <div class="col text-center pb-3">
   <h2 class="">Form Penjualan Tanpa Resep</h2>
 </div>
-<form class="border border-primary rounded" method="post">
+
+<form class="border border-primary rounded form-insert-pembelian" method="post">
     <div class="form-group col">
     <label for="namaobat" class="font-weight-bold col-sm-3 col-form-label">Nama Obat</label>
-    <div class="col-sm-5">
+    <div class="col-sm-7">
 
+    <!-- Obat -->
     <div class="form-inline line-input">
-      <div class="search-box">
+      <div class="search-box" style="position: relative;">
+          <!-- Nama -->
           <!-- <input type="text" class="form-control" id="namaobat" name="namaobat" placeholder="Nama Obat"> -->
-          <input type="text" class="form-control" id="namaobat" name="namaobat" autocomplete="off" placeholder="Nama Obat..." required="required">
+          <input type="text" class="form-control search-text" autocomplete="off" placeholder="Nama Obat..." required="required">
 
-          <div class="result"></div>
-        </div>
-        <input type="text" class="form-control" id="kodeobat" name="kodeobat" readonly="readonly" style="display: none;">
-        <button type="button" class="mx-2 my-1 btn btn-default btn-insert">
-            <span class="fa fa-plus" aria-hidden="true"></span>
-        </button>
+          <div class="result" id="test"></div>
+      </div>
+      <!-- Total -->
+      <input type="number" class="form-control ml-2 jumlah-obat" placeholder="Jumlah" required="required">
+      <!-- Harga -->
+      <input type="text" class="form-control ml-2 harga-obat" placeholder="Harga Obat..." readonly="readonly" required="required">
+      <!-- Button -->
+      <button type="button" class="mx-2 my-1 btn btn-default btn-insert">
+        <span class="fa fa-plus" aria-hidden="true"></span>
+      </button>
     </div>
-    </div>
-  </div>
-    <div class="form-group col">
-    <label for="hargaobat" class="font-weight-bold col-sm-3 col-form-label">Harga </label>
-    <div class="col-sm-5">
-      <input type="text" class="form-control" id="hargaobat" name="hargaobat" placeholder="Harga Obat..." readonly="readonly" required="required">
-    </div>
-  </div>
-    <div class="form-group col">
-    <label for="jumlah" class="font-weight-bold col-sm-3 col-form-label">Jumlah</label>
-    <div class="col-sm-5">
-      <input type="number" class="form-control" id="jumlah" name="jumlah" placeholder="Jumlah" oninput="fillTotHarga(this.value);" required="required">
+
+    <!-- N -->
     </div>
   </div>
   <div class="form-group col">
     <label for="total" class="font-weight-bold col-sm-3 col-form-label">Total</label>
     <div class="col-sm-5">
-      <input type="text" class="form-control" id="total" name="total" placeholder="Total" readonly="readonly">
+      <input type="text" class="form-control total-harga" placeholder="Total" readonly="readonly">
     </div>
   </div>
   <div class="form-group col">
@@ -267,18 +304,18 @@ include "obat_con.php";
   <div class="form-group col">
     <label for="bayar" class="font-weight-bold col-sm-3 col-form-label">Pembayaran</label>
     <div class="col-sm-5">
-      <input type="text" class="form-control" id="bayar" placeholder="bayar" oninput="fillKembali(this.value);" required="required">
+      <input type="number" class="form-control pembayaran-int" placeholder="bayar" required="required">
     </div>
   </div>
   <div class="form-group col">
     <label for="sisa" class="font-weight-bold col-sm-3 col-form-label">Sisa</label>
     <div class="col-sm-5">
-      <input type="text" class="form-control" id="sisa" placeholder="Kembali" readonly="readonly">
+      <input type="text" class="form-control kembali-int" placeholder="Kembali" readonly="readonly">
     </div>
   </div>
   <div class="form-group col">
     <div class="col-sm-5">
-      <input class="btn btn-lg btn-primary btn-block" type="submit" name="submitnonresep"></input>
+      <input class="btn btn-lg btn-primary btn-block btn-submit-penjualan" type="submit" name="submitnonresep"></input>
     </div>
   </div>
 </form>

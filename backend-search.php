@@ -26,7 +26,7 @@ if(isset($_REQUEST["term"])){
             if(mysqli_num_rows($result) > 0){
                 // Fetch result rows as an associative array
                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                    echo "<p data-kode='" . $row['kode_obat'] . "' data-harga='" . $row['harga'] . "' onClick='fillHarga(event); return false;'>" . $row["nama_obat"] . "</p>";
+                    echo "<p data-kode='" . $row['kode_obat'] . "' data-harga='" . $row['harga'] . "' class='list-obat'>" . $row["nama_obat"] . "</p>";
                 }
             } else{
                 echo "<p>No matches found</p>";

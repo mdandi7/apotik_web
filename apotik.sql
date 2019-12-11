@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2019 at 12:20 AM
+-- Generation Time: Dec 11, 2019 at 01:02 AM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.3.12
 
@@ -21,6 +21,22 @@ SET time_zone = "+00:00";
 --
 -- Database: `apotik`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `obat_terjual`
+--
+
+CREATE TABLE `obat_terjual` (
+  `row_id` int(11) NOT NULL,
+  `no_faktur` int(11) NOT NULL,
+  `type_penjualan` varchar(25) NOT NULL,
+  `kode_obat` int(11) NOT NULL,
+  `nama_obat` varchar(50) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `total_harga` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -138,23 +154,6 @@ CREATE TABLE `penjualan_resep_detail` (
   `total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `penjualan_resep_detail`
---
-
-INSERT INTO `penjualan_resep_detail` (`no_faktur`, `kode_obat`, `nama_pasien`, `nama_dokter`, `tgl`, `jumlah`, `total`) VALUES
-(1, '13', 'Jumadin', 'dr. Sasly fitriana', '2019-06-24', 1, 53000),
-(2, '2', 'Danny', 'Bastian', '2019-09-18', 1, 121212),
-(3, '17', 'Muh. faisal', 'dr. Umnawati', '2019-11-27', 1, 28000),
-(4, '7', 'Ny. Hermin', 'dr. Haslinda', '2019-11-27', 5, 15000),
-(5, '17', 'Indah', 'dr. Angelina', '2019-06-25', 1, 28000),
-(6, '22', 'Martinus', 'dr. Dwi mirnawati', '2019-05-10', 1, 6000),
-(11, '1', 'Muh. Faisal', 'dr. Umnawati', '2019-10-02', 2, 14000),
-(12, '16', 'Hanum', 'dr. Indira', '2019-11-10', 1, 15000),
-(129, '1', 'dany', 'dr. test', '2019-12-10', 1, 7000),
-(130, '1', 'dany', 'dr. test', '2019-12-10', 1, 7000),
-(131, '10', 'dany', 'dr. test', '2019-12-10', 1, 15000);
-
 -- --------------------------------------------------------
 
 --
@@ -163,37 +162,10 @@ INSERT INTO `penjualan_resep_detail` (`no_faktur`, `kode_obat`, `nama_pasien`, `
 
 CREATE TABLE `penjualan_tanparesep_detail` (
   `no_faktur1` int(10) NOT NULL,
-  `kode_obat` varchar(10) NOT NULL,
   `jumlah` int(11) NOT NULL,
   `tgl` date NOT NULL,
   `total1` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `penjualan_tanparesep_detail`
---
-
-INSERT INTO `penjualan_tanparesep_detail` (`no_faktur1`, `kode_obat`, `jumlah`, `tgl`, `total1`) VALUES
-(1, '12341234', 2, '2019-09-24', 10000),
-(2, '1212', 2, '2019-10-16', 10000),
-(3, '12341234', 3, '2019-10-16', 15000),
-(4, '1', 1, '2019-10-16', 7000),
-(12, '1', 1, '2019-10-02', 7000),
-(13, '12341234', 3, '2019-10-11', 15000),
-(14, '222', 1, '2019-10-17', 6000),
-(15, '12341234', 4, '2019-10-17', 20000),
-(16, '222', 2, '2019-10-17', 12000),
-(19, '12', 2, '2019-11-10', 7000),
-(20, '4', 1, '2019-11-27', 7000),
-(21, '15', 2, '2019-11-27', 10000),
-(22, '10', 1, '2019-11-27', 15000),
-(23, '9', 1, '2019-11-27', 3000),
-(24, '12', 1, '2019-11-27', 3500),
-(25, '15', 2, '2019-11-27', 10000),
-(26, '15', 5, '2019-11-27', 25000),
-(27, '15', 1, '2019-11-27', 5000),
-(89, '10', 1, '2019-12-10', 15000),
-(101, '1', 1, '2019-12-10', 7000);
 
 -- --------------------------------------------------------
 
@@ -225,6 +197,12 @@ INSERT INTO `user` (`user_id`, `nama`, `username`, `password`, `nohp`, `user_ind
 --
 
 --
+-- Indexes for table `obat_terjual`
+--
+ALTER TABLE `obat_terjual`
+  ADD PRIMARY KEY (`row_id`);
+
+--
 -- Indexes for table `pemasukan_obat`
 --
 ALTER TABLE `pemasukan_obat`
@@ -253,16 +231,22 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `obat_terjual`
+--
+ALTER TABLE `obat_terjual`
+  MODIFY `row_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `penjualan_resep_detail`
 --
 ALTER TABLE `penjualan_resep_detail`
-  MODIFY `no_faktur` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `no_faktur` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `penjualan_tanparesep_detail`
 --
 ALTER TABLE `penjualan_tanparesep_detail`
-  MODIFY `no_faktur1` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `no_faktur1` int(10) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
