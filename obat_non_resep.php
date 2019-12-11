@@ -139,6 +139,11 @@ include "configdb.php";
         $(document).on("keyup input", ".pembayaran-int", function(){
           var kembali = parseInt($(this).val()) - parseInt($(".total-harga").val()); 
           $(".kembali-int").val(kembali);
+          if(kembali > 0){
+            $(".btn-submit-penjualan").attr("disabled", false);
+          }else{
+            $(".btn-submit-penjualan").attr("disabled", true);
+          }
         });
 
         //BUTTON PEMBAYARAN
@@ -158,7 +163,7 @@ include "configdb.php";
 
           var tanggal = $("#tgl").val();
           var total = $(".total-harga").val();
-
+          var login_name = "<?php echo $login_name; ?>";
           $.ajax({
             type: "POST",
             url: 'pembelian-obat-ajax.php',
@@ -169,9 +174,18 @@ include "configdb.php";
               tanggal : tanggal,
               type : 'non-resep',
               total_harga : total, 
+              login_name : login_name,
             },
             complete: function(response){
-              alert(response.responseText);
+              var resp = response.responseText.split('||');
+              if(resp.length > 2){
+                $("#divToPrint").html(resp[2]);
+                PrintDiv();
+                alert(resp[1]);
+              }else{
+                alert(resp[0]);
+              }
+
             },
             error: function () {
               //alert("Select failed.");
@@ -208,14 +222,6 @@ include "configdb.php";
 
   <!-- Print -->
   <div id="divToPrint" style="display:none;">
-    <div>
-             <?php 
-                echo $html; 
-                if($html!=""){
-                  echo"<script type='text/javascript'>PrintDiv();</script>";
-                }
-             ?>      
-    </div>
   </div>
 
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
@@ -315,7 +321,7 @@ include "configdb.php";
   </div>
   <div class="form-group col">
     <div class="col-sm-5">
-      <input class="btn btn-lg btn-primary btn-block btn-submit-penjualan" type="submit" name="submitnonresep"></input>
+      <input class="btn btn-lg btn-primary btn-block btn-submit-penjualan" type="submit" disabled name="submitnonresep"></input>
     </div>
   </div>
 </form>
@@ -324,13 +330,6 @@ include "configdb.php";
 <!-- insert query -->
 <!-- insert data from db -->
 </body>
-  <span>
-    <?php 
-      if ($error!=""){
-        echo '<script> var eror = "'; echo $error; echo '";popup(eror); </script>';
-      } 
-    ?>
-  </span>
 <script src="assets/jquery-3.4.1.min.js" type="text/javascript"></script>
 <script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 </html>

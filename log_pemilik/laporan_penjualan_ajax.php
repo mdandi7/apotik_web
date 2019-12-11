@@ -12,7 +12,7 @@
     if($query_ind == "daily"){
         $tgl = $_POST['choosenDay'];
 
-        $query = mysqli_query($connection, "SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE tgl = '$tgl'");
+        $query = mysqli_query($connection, "SELECT a.no_faktur1, b.kode_obat, b.nama_obat, b.jumlah, a.tgl, b.total_harga FROM penjualan_tanparesep_detail a LEFT JOIN obat_terjual b on a.no_faktur1 = b.no_faktur WHERE tgl = '$tgl'");
         
         $rows = mysqli_num_rows($query);
 
@@ -34,7 +34,7 @@
             $html .= "<td>" .$result['nama_obat']. "</td>";
             $html .= "<td>" .$result['jumlah']. "</td>";
             $html .= "<td>" .$result['tgl']. "</td>";
-            $html .= "<td>" .$result['total1']. "</td></tr>";
+            $html .= "<td>" .$result['total_harga']. "</td></tr>";
         }
 
         $html .= "</table>";
@@ -52,7 +52,7 @@
         $html .= "<th>Tanngal</th>";
         $html .= "<th>Total</th></tr></thead>";
 
-        $query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE tgl = '$tgl'");
+        $query = mysqli_query($connection,"SELECT a.no_faktur, a.nama_dokter, a.nama_pasien, b.kode_obat, b.nama_obat, b.jumlah, a.tgl, b.total_harga FROM penjualan_resep_detail a LEFT JOIN obat_terjual b on a.no_faktur = b.no_faktur WHERE tgl = '$tgl'");
         $rows = mysqli_num_rows($query);
 
         for($i=0;$i<$rows;$i++){
@@ -65,7 +65,7 @@
             $html .= "<td>" .$result['nama_dokter']. "</td>";
             $html .= "<td>" .$result['jumlah']. "</td>";
             $html .= "<td>" .$result['tgl']. "</td>";
-            $html .= "<td>" .$result['total']. "</td>";
+            $html .= "<td>" .$result['total_harga']. "</td>";
         }
 
         $html .= "</table>";
@@ -77,7 +77,7 @@
     }else if($query_ind == "monthly"){
         $tgl = $_POST['choosenMth'];
         
-        $query = mysqli_query($connection, "SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE DATE_FORMAT(tgl,'%Y-%m') = '$tgl'");
+        $query = mysqli_query($connection, "SELECT a.no_faktur1, b.kode_obat, b.nama_obat, b.jumlah, a.tgl, b.total_harga FROM penjualan_tanparesep_detail a LEFT JOIN obat_terjual b on a.no_faktur1 = b.no_faktur WHERE DATE_FORMAT(tgl,'%Y-%m') = '$tgl'");
         
         $rows = mysqli_num_rows($query);
 
@@ -99,7 +99,7 @@
             $html .= "<td>" .$result['nama_obat']. "</td>";
             $html .= "<td>" .$result['jumlah']. "</td>";
             $html .= "<td>" .$result['tgl']. "</td>";
-            $html .= "<td>" .$result['total1']. "</td></tr>";
+            $html .= "<td>" .$result['total_harga']. "</td></tr>";
         }
 
         $html .= "</table>";
@@ -117,7 +117,7 @@
         $html .= "<th>Tanngal</th>";
         $html .= "<th>Total</th></tr></thead>";
 
-        $query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE DATE_FORMAT(tgl,'%Y-%m') = '$tgl'");
+        $query = mysqli_query($connection,"SELECT a.no_faktur, a.nama_dokter, a.nama_pasien, b.kode_obat, b.nama_obat, b.jumlah, a.tgl, b.total_harga FROM penjualan_resep_detail a LEFT JOIN obat_terjual b on a.no_faktur = b.no_faktur WHERE DATE_FORMAT(tgl,'%Y-%m') = '$tgl'");
         $rows = mysqli_num_rows($query);
 
         for($i=0;$i<$rows;$i++){
@@ -130,7 +130,7 @@
             $html .= "<td>" .$result['nama_dokter']. "</td>";
             $html .= "<td>" .$result['jumlah']. "</td>";
             $html .= "<td>" .$result['tgl']. "</td>";
-            $html .= "<td>" .$result['total']. "</td>";
+            $html .= "<td>" .$result['total_harga']. "</td>";
         }
 
         $html .= "</table>";
