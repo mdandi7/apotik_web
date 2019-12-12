@@ -1,7 +1,6 @@
 <?php
 include "string.php";
 include "configdb.php";
-include "export_data.php";
 
 //$con = OpenCon();
 
@@ -10,28 +9,101 @@ include "export_data.php";
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?php echo $nama_aplikasi ?></title>
+  <title><?php echo $nama_aplikasi ?></title>
 
     <!-- Required meta tags -->
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
+  <script src="assets/jquery-3.4.1.min.js" type="text/javascript"></script>
+  <script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 
-	<style type="text/css">
-		.navbar {
-			padding: .8rem;
-		}
-		.navbar-nav li {
-			padding-right: 20px;
-		}
-		.carousel-inner img {
-			width: 100%;
-			height: 100%;
-		}
-	</style>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css">
+
+  <link rel="stylesheet" type="text/css" href="assets/plugin/datepicker/css/bootstrap-datepicker.min.css">
+  <script src="assets/plugin/datepicker/js/bootstrap-datepicker.min.js"></script>
+
+  <style type="text/css">
+    .navbar {
+      padding: .8rem;
+    }
+    .navbar-nav li {
+      padding-right: 20px;
+    }
+    .carousel-inner img {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+
+  <script type="text/javascript">
+
+    $(document).ready(function(){
+      $(function(){
+        $(".datepicker").datepicker({
+          format: 'yyyy-mm',
+          autoclose: true,
+          todayHighlight: true,
+          startView: "months", 
+          minViewMode: "months"
+        });
+        $(".datepicker").datepicker("setDate", new Date());
+      });
+
+      $(".btn-mth").click(function(e){
+        var choosenMth = $("#choosen-mth").val();
+        var but_this = this;
+        $(but_this).attr("disabled", true);
+        $(but_this).val("Loading...");
+
+        $.ajax({
+          type: "POST",
+          url: 'laporan_penjualan_ajax.php',
+          data:{
+            choosenDay : 0,
+            choosenMth: choosenMth,
+            query_ind: 'monthly'
+          },
+          complete: function(response){
+            var respVal = response.responseText.split('|');
+            document.getElementById("form-penjualan").innerHTML = respVal[0];
+            eval(respVal[1]);
+            $(but_this).attr("disabled", false);
+            $(but_this).val("go");
+          },
+          error: function () {
+            //alert("Select failed.");
+            //$('#test').html('Bummer: there was an error!');
+            //document.getElementById("test").innerHTML = prepareSQL;
+          }
+        });
+        return false;
+      });
+
+      setTimeout(function() {
+        $(".btn-mth").trigger("click");  
+      },10);
+    });
+
+    function FunctionOnLoad(){
+
+      
+
+      $(".exportharian").click(function(e){
+        var choosenMth = $("#choosen-mth").val();
+        var page = "export_data.php?data=" + choosenMth +" &download_ind=monthly";
+        window.location = page;
+
+        return false;
+      });
+
+    }
+
+  </script>
+
 </head>
 
 <body>
+  
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top sticky-top">
   <a class="navbar-brand" href="#"><img src=4.jpg "/docs/4.3/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt=""> Apotek Setiawan</a>
@@ -75,92 +147,26 @@ include "export_data.php";
   </div>
 </nav>
 
-
 <div class="container py-5">
+  <div class="form-inline justify-content-end mt-3">
+    <div class="input-group date">
+      <div class="input-group-addon">
+           <span class="glyphicon glyphicon-th"><b>Bulan : &nbsp; </b></span>
+      </div>
+    <input type="text" class="form-control datepicker px-4" id="choosen-mth" autocomplete="off">
+    <input class="btn btn-info px-4 mr-2 ml-1 btn-mth" type="button" value="Go"/>
+    </div>
+  </div>
   <div class="col text-center ">
     <h2 class="">Penjualan Bulanan</h2>
   </div>
 </div>
-<div class="">
-<form method="post" class="container-fluid row justify-content-center">
-<table class='table table-outline table-hover col-md-8 mx-3 table-md'>
-  <thead class='thead-light'>
-    <tr>
-      <th colspan="6">Penjualan Tanpa Resep</th>
-    </tr>
-    <tr>
-      <th>No Faktur</th>
-      <th>Kode Obat</th>
-      <th>Nama Obat</th>
-      <th>Jumlah</th>
-      <th>Tanngal</th>
-      <th>Total</th>
-    </tr>
-<?php
-  $query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_tanparesep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE month(tgl) = month(now())");
 
-  $rows = mysqli_num_rows($query);
-  for($i=0;$i<$rows;$i++){
-    $result = mysqli_fetch_assoc($query);
-    //$namaobat_pass = $result['nama_obat'];
-    echo "<tr><td>" .$result['no_faktur1']. "</td>";
-    echo "<td>" .$result['kode_obat']. "</td>";
-    echo "<td>" .$result['nama_obat']. "</td>";
-    echo "<td>" .$result['jumlah']. "</td>";
-    echo "<td>" .$result['tgl']. "</td>";
-    echo "<td>" .$result['total1']. "</td>";
-  }
-?>
-  </thead>
-</table>
+<div id="form-penjualan">
 
-<br>
-<br>
-
-<table class='table table-outline table-hover col-md-8 mx-3 table-md'>
-  <thead class='thead-light'>
-    <tr>
-      <th colspan="8">Penjualan Dengan Resep</th>
-    </tr>
-    <tr>
-      <th>No Faktur</th>
-      <th>Kode Obat</th>
-      <th>Nama Obat</th>
-      <th>Nama Pasien</th>
-      <th>Nama Dokter</th>
-      <th>Jumlah</th>
-      <th>Tanngal</th>
-      <th>Total</th>
-    </tr>
-<?php
-  $query = mysqli_query($connection,"SELECT a.*, b.nama_obat FROM penjualan_resep_detail a JOIN pemasukan_obat b on a.kode_obat = b.kode_obat WHERE month(tgl) = month(now())");
-
-  $rows = mysqli_num_rows($query);
-  for($i=0;$i<$rows;$i++){
-    $result = mysqli_fetch_assoc($query);
-    //$namaobat_pass = $result['nama_obat'];
-    echo "<tr><td>" .$result['no_faktur']. "</td>";
-    echo "<td>" .$result['kode_obat']. "</td>";
-    echo "<td>" .$result['nama_obat']. "</td>";
-    echo "<td>" .$result['nama_pasien']. "</td>";
-    echo "<td>" .$result['nama_dokter']. "</td>";
-    echo "<td>" .$result['jumlah']. "</td>";
-    echo "<td>" .$result['tgl']. "</td>";
-    echo "<td>" .$result['total']. "</td>";
-  }
-?>
-  </thead>
-</table>
-<input class="col-sm-4 btn btn-lg btn-primary btn-block my-4" type="submit" value="Download" name="exportbulanan"></input>
-</form>
 </div>
+
+<!-- Footer -->
+
 </body>
-
-<!-- Footer --><!-- 
-<footer class="bg-dark text-center text-light pb-2 pt-2 mt-5 rounded-top"> 
-  &copy Copyright 2019
-</footer> -->
-
-<script src="assets/jquery-3.4.1.min.js" type="text/javascript"></script>
-<script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 </html>
